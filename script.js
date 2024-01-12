@@ -2,12 +2,15 @@
 
 const board = document.getElementById("game-board");
 const gridSize = 20;
+const instructionText = document.getElementById("instruction-text");
+const logo = document.getElementById("logo");
 
 let snake = [{ x: 10, y: 10 }];
 let food = generateFood();
 let direction = "right";
 let gameInterval;
 let gameSpeedDelay = 200;
+let gameStarted = false;
 
 //Draw game map, snake and food
 function draw() {
@@ -84,7 +87,18 @@ function move() {
 }
 
 // Test move
-setInterval(() => {
-  move();
-  draw();
-}, 200);
+// setInterval(() => {
+//   move();
+//   draw();
+// }, 200);
+
+function startGame() {
+  gameStarted = true;
+  instructionText.style.display = "none";
+  logo.style.display = "none";
+  gameInterval = setInterval(() => {
+    move();
+    // checkCollision();
+    draw();
+  }, gameSpeedDelay);
+}
