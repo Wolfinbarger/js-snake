@@ -102,3 +102,26 @@ function startGame() {
     draw();
   }, gameSpeedDelay);
 }
+
+function handleKeyPress(event) {
+  if (!gameStarted && (event.code === "Space" || event.key === " ")) {
+    startGame();
+  } else {
+    switch (event.key) {
+      case "ArrowUp":
+        direction = "up";
+        break;
+      case "ArrowDown":
+        direction = "down";
+        break;
+      case "ArrowLeft":
+        direction = "left";
+        break;
+      case "ArrowRight":
+        direction = "right";
+        break;
+    }
+  }
+}
+
+document.addEventListener("keydown", handleKeyPress);
