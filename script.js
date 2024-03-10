@@ -4,6 +4,8 @@ const board = document.getElementById("game-board");
 const gridSize = 20;
 const instructionText = document.getElementById("instruction-text");
 const logo = document.getElementById("logo");
+const score = document.getElementById("score");
+const highScoreText = document.getElementById("highScore");
 
 let snake = [{ x: 10, y: 10 }];
 let food = generateFood();
@@ -11,12 +13,14 @@ let direction = "right";
 let gameInterval;
 let gameSpeedDelay = 200;
 let gameStarted = false;
+let highScore = 0;
 
 //Draw game map, snake and food
 function draw() {
   board.innerHTML = "";
   drawSnake();
   drawFood();
+  updateScore();
 }
 
 function drawSnake() {
@@ -41,13 +45,12 @@ function setPosition(element, position) {
   element.style.gridRow = position.y;
 }
 
-// Testing draw function
-draw();
-
 function drawFood() {
-  const foodElement = createGameElement("div", "food");
-  setPosition(foodElement, food);
-  board.appendChild(foodElement);
+  if (gameStarted) {
+    const foodElement = createGameElement("div", "food");
+    setPosition(foodElement, food);
+    board.appendChild(foodElement);
+  }
 }
 
 function generateFood() {
@@ -80,7 +83,7 @@ function move() {
     clearInterval(gameInterval);
     gameInterval = setInterval(() => {
       move();
-      // checkCollision();
+      checkCollision();
       draw();
     }, gameSpeedDelay);
   } else {
@@ -88,19 +91,13 @@ function move() {
   }
 }
 
-// Test move
-// setInterval(() => {
-//   move();
-//   draw();
-// }, 200);
-
 function startGame() {
   gameStarted = true;
   instructionText.style.display = "none";
   logo.style.display = "none";
   gameInterval = setInterval(() => {
     move();
-    // checkCollision();
+    checkCollision();
     draw();
   }, gameSpeedDelay);
 }
@@ -155,4 +152,33 @@ function checkCollision() {
   }
 }
 
-function resetGame() {}
+function resetGame() {
+  updateHighScore();
+  stopGame();
+  snake = [{ x: 10, y: 10 }];
+  food = generateFood();
+  direction = "right";
+  gameSpeedDelay = 200;
+  updateScore();
+}
+
+function updateScore() {
+  const currentScore = snake.length - 1;
+  score.textContent = currentScore.toString().padStart(3, "0");
+}
+
+function stopGame() {
+  clearInterval(gameInterval);
+  gameStarted = false;
+  instructionText.style.display = "block";
+  logo.style.display = "block";
+}
+
+function updateHighScore() {
+  const currentScore = snake.length - 1;
+  if (currentScore > highScore) {
+    highScore = currentScore;
+    highScoreText.textContent = highScore.toString().padStart(3, "0");
+  }
+  highScoreText.style.display = "block";
+}
